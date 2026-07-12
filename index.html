@@ -420,16 +420,12 @@ var pickerBtn = document.getElementById('picker-btn');
 var tokenClient;
 
 function onApiLoad() {
-  gapi.load('picker');
-  google.accounts.id.initialize({client_id: CLIENT_ID});
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/drive.file',
     callback: function(resp) {
       if (resp.access_token) {
-        gapi.load('picker', function() {
-          createPicker(resp.access_token);
-        });
+        document.getElementById('file-input').click();
       }
     }
   });
@@ -437,35 +433,74 @@ function onApiLoad() {
 }
 
 function openPicker() {
-  tokenClient.requestAccessToken();
+  tokenClient.requestAccessToken({prompt: 'consent'});
 }
 
-function createPicker(token) {
-  var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
-    .setIncludeFolders(true)
-    .setSelectFolderEnabled(false)
-    .setMode(google.picker.DocsViewMode.LIST);
+// Override the normal file input to upload via Drive API when picker is used
+document.addEventListener('DOMContentLoaded', function() {
+  var origInput = document.getElementById('file-input');
+  var status = document.getElementById('upload-status');
   
-  var uploadView = new google.picker.DocsUploadView()
-    .setParent(FOLDER_ID);
-  
-  var picker = new google.picker.PickerBuilder()
-    .addView(view)
-    .addView(uploadView)
-    .setOAuthToken(token)
-    .setDeveloperKey(CLIENT_ID)
-    .setAppId(CLIENT_ID.split('-')[0])
-    .setCallback(function(data) {
-      if (data.action == 'picked') {
-        document.getElementById('upload-status').textContent = '✅ Files uploaded successfully!';
-        document.getElementById('upload-status').className = 'upload-status success';
-        document.getElementById('upload-status').style.display = 'block';
-        setTimeout(function() { document.getElementById('upload-status').style.display = 'none' }, 5000);
+  origInput.addEventListener('change', async function() {
+    if (!this.files.length || !tokenClient) return;
+    
+    status.textContent = '📤 Uploading directly to Drive...';
+    status.className = 'upload-status';
+    status.style.display = 'block';
+    
+    for (var i = 0; i < this.files.length; i++) {
+      var file = this.files[i];
+      var reader = new FileReader();
+      
+      var content = await new Promise(function(r) {
+        reader.onload = function() { r(reader.result.split(',')[1]); };
+        reader.readAsDataURL(file);
+      });
+      
+      var meta = {
+        name: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        parents: [FOLDER_ID]
+      };
+      
+      var boundary = '-------' + Date.now();
+      var body = '--' + boundary + '\r\n';
+      body += 'Content-Type: application/json; charset=UTF-8\r\n\r\n';
+      body += JSON.stringify(meta) + '\r\n';
+      body += '--' + boundary + '\r\n';
+      body += 'Content-Type: ' + (file.type || 'application/octet-stream') + '\r\n';
+      body += 'Content-Transfer-Encoding: base64\r\n\r\n';
+      body += content + '\r\n';
+      body += '--' + boundary + '--';
+      
+      try {
+        var resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + tokenClient.access_token,
+            'Content-Type': 'multipart/related; boundary=' + boundary
+          },
+          body: body
+        });
+        
+        if (resp.ok) {
+          status.textContent = '✅ ' + file.name + ' uploaded to Drive!';
+          status.className = 'upload-status success';
+        } else {
+          status.textContent = '❌ ' + file.name + ' failed';
+          status.className = 'upload-status error';
+        }
+      } catch(e) {
+        status.textContent = '❌ Error: ' + e.message;
+        status.className = 'upload-status error';
       }
-    })
-    .build();
-  picker.setVisible(true);
-}
+    }
+    
+    status.style.display = 'block';
+    this.value = '';
+    setTimeout(function() { status.style.display = 'none'; }, 5000);
+  });
+});
 </script>
 <div class="bottom-logo" style="text-align:center;width:100%;overflow:hidden;line-height:0;padding:1rem 0 2rem;margin-top:-5vh">
 <img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_15_23%20AM.png" alt="" style="width:30%;max-width:210px;height:auto;display:inline-block" />
