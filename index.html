@@ -419,7 +419,9 @@ var pickerApiLoaded = false;
 var oauthToken = null;
 
 function onPickerApiLoad() {
-  pickerApiLoaded = true;
+  gapi.load('picker', function() {
+    pickerApiLoaded = true;
+  });
 }
 
 function openPicker() {
