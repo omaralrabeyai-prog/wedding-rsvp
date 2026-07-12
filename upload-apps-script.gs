@@ -1,50 +1,48 @@
-/**
- * Wedding Photo Upload Backend (Simplified)
- * Guests upload through the website — never access the folder.
- */
-
 const FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
 
 function doGet() {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'ok', message: 'Upload endpoint ready' }))
-    .setMimeType(ContentService.MimeType.JSON);
+  var html = '<form method="POST" enctype="multipart/form-data"><input type="file" name="file" /><input type="submit" /></form>';
+  return HtmlService.createHtmlOutput(html);
 }
 
 function doPost(e) {
   try {
-    const folder = DriveApp.getFolderById(FOLDER_ID);
-    let count = 0;
+    var folder = DriveApp.getFolderById(FOLDER_ID);
 
-    // Loop through all parameters — any blob is a file
-    const keys = Object.keys(e.parameter);
-    for (let key of keys) {
-      const val = e.parameter[key];
-      // In Apps Script, uploaded files come as Blob objects
+    // Check for the blob in e.parameter
+    if (e.parameter.file && e.parameter.file.getBytes) {
+      var blob = e.parameter.file;
+      folder.createFile(blob).setDescription('Uploaded ' + new Date().toISOString());
+      return ContentService.createTextOutput(JSON.stringify({ success: true, message: 'File saved: ' + blob.getName() }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // Fallback: check all params  
+    var keys = Object.keys(e.parameter);
+    for (var i = 0; i < keys.length; i++) {
+      var val = e.parameter[keys[i]];
       if (val && typeof val === 'object' && val.getBytes) {
-        folder.createFile(val).setDescription('Wedding upload ' + new Date().toISOString());
-        count++;
+        folder.createFile(val).setDescription('Uploaded ' + new Date().toISOString());
+        return ContentService.createTextOutput(JSON.stringify({ success: true, message: 'File saved: ' + val.getName() }))
+          .setMimeType(ContentService.MimeType.JSON);
       }
     }
 
-    // Fallback: if postData exists, try to create a blob from it
-    if (count === 0 && e.postData && e.postData.contents) {
-      const blob = Utilities.newBlob(
-        e.postData.contents,
-        e.postData.type || 'application/octet-stream',
-        'photo_' + Date.now() + '.jpg'
-      );
-      folder.createFile(blob);
-      count++;
+    // Debug: return what we received
+    var info = { keys: keys, types: [], hasPostData: !!e.postData };
+    for (var j = 0; j < keys.length; j++) {
+      info.types.push(typeof e.parameter[keys[j]]);
     }
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: count > 0, count: count, message: count + ' file(s) uploaded' }))
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: 'No file blob found', debug: info }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function testDrive() {
+  var f = DriveApp.getFolderById(FOLDER_ID);
+  Logger.log('OK: ' + f.getName());
 }
