@@ -411,27 +411,40 @@ document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0
 </script>
 
 <!-- Google Picker for large file uploads -->
-<script src="https://accounts.google.com/gsi/client" onload="onGisLoad()"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
 <script>
 var CLIENT_ID = '386309270300-ou39l675ocsulq2a4hpd5fr7ho7ac2ek.apps.googleusercontent.com';
 var FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
 var tokenClient = null;
 
-function onGisLoad() {
-  tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/drive.file',
-    callback: function(resp) {
-      if (resp.access_token) {
-        document.getElementById('file-input').click();
+// Initialize token client once GIS is available
+function initTokenClient() {
+  if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+    tokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: 'https://www.googleapis.com/auth/drive.file',
+      callback: function(resp) {
+        if (resp.access_token) {
+          document.getElementById('file-input').click();
+        }
       }
-    }
-  });
+    });
+  }
 }
+
+// Retry init every second for 10 seconds
+var initInterval = setInterval(function() {
+  if (!tokenClient) initTokenClient();
+  if (tokenClient) clearInterval(initInterval);
+}, 1000);
+setTimeout(function() { clearInterval(initInterval); }, 10000);
 
 function openPicker() {
   if (!tokenClient) {
-    alert('Google API still loading. Please wait a moment and try again.');
+    alert('Still loading... please wait a few seconds and click again.');
+    // Try once more
+    initTokenClient();
+    if (tokenClient) tokenClient.requestAccessToken({prompt: 'consent'});
     return;
   }
   tokenClient.requestAccessToken({prompt: 'consent'});
