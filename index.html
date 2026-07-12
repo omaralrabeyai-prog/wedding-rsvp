@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0
 </script>
 
 <!-- Google Picker API -->
-<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://apis.google.com/js/api.js?onload=onPickerApiLoad"></script>
 <script>
 var CLIENT_ID = '386309270300-ou39l675ocsulq2a4hpd5fr7ho7ac2ek.apps.googleusercontent.com';
 var FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
@@ -425,7 +425,38 @@ function onPickerApiLoad() {
 function openPicker() {
   if (!pickerApiLoaded) {
     alert('Picker still loading, please wait...');
-    retu...[truncated]
+    return;
+  }
+  
+  // Authorize and create picker
+  gapi.auth.authorize({
+    client_id: CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    immediate: false
+  }, function(authResult) {
+    if (authResult && !authResult.error) {
+      oauthToken = authResult.access_token;
+      var picker = new google.picker.PickerBuilder()
+        .addView(new google.picker.DocsUploadView().setParent(FOLDER_ID))
+        .setOAuthToken(oauthToken)
+        .setDeveloperKey(CLIENT_ID)
+        .setCallback(function(data) {
+          if (data.action === 'picked') {
+            var status = document.getElementById('upload-status');
+            status.textContent = '✅ File uploaded to Drive!';
+            status.className = 'upload-status success';
+            status.style.display = 'block';
+            setTimeout(function() { status.style.display = 'none'; }, 5000);
+          }
+        })
+        .build();
+      picker.setVisible(true);
+    }
+  });
+}
+
+// API loaded callback
+window.onApiLoad = onPickerApiLoad;
 <div class="bottom-logo" style="text-align:center;width:100%;overflow:hidden;line-height:0;padding:1rem 0 2rem;margin-top:-5vh">
 <img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_15_23%20AM.png" alt="" style="width:30%;max-width:210px;height:auto;display:inline-block" />
 </div>
