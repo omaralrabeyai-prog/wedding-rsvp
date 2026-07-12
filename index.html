@@ -392,7 +392,7 @@ section{padding:1rem 0}
 <div class="upload-status" id="upload-status"></div>
 </div>
 <p style="text-align:center;font-weight:600;color:#f0f0e8;margin-top:1.5rem;font-size:0.9rem">Guests can add photos &amp; Videos, only the couple can delete them.</p>
-<p id="picker-btn" style="text-align:center;margin-top:1rem;display:none"><button onclick="openPicker()" style="background:#c9a96e;color:#fff;border:none;padding:0.75rem 2rem;border-radius:10px;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif">📁 Upload Large Files (no size limit)</button></p>
+<p id="picker-btn" style="text-align:center;margin-top:1rem"><button onclick="openPicker()" style="background:#c9a96e;color:#fff;border:none;padding:0.75rem 2rem;border-radius:10px;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif">📁 Upload Large Files (no size limit)</button></p>
 </div></section>
 
 <footer><div class="container">
@@ -429,7 +429,6 @@ function onApiLoad() {
       }
     }
   });
-  if (pickerBtn) pickerBtn.style.display = 'block';
 }
 
 function openPicker() {
