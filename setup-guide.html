@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    line-height: 1.6;
+    padding: 40px 20px;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+  }
+
+  /* Step card */
+  .step {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .step-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .step p, .step li {
+    color: #444;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  .step ul { padding-left: 1.5rem; }
+  .step li { margin-bottom: 0.3rem; }
+
+  /* Screenshot mockup */
+  .mockup {
+    background: #f8f8fa;
+    border: 1.5px solid #e8e8ed;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+    font-size: 0.85rem;
+    position: relative;
+  }
+  .mockup-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1d1d1f;
+  }
+  .mockup-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .mockup-col {
+    flex: 1;
+    min-width: 200px;
+    background: #fff;
+    border: 1px solid #e0e0e5;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .mockup-header {
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #888;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eee;
+  }
+  .mockup-row {
+    padding: 4px 0;
+    font-size: 0.8rem;
+    color: #555;
+  }
+  .mockup-row strong { color: #1d1d1f; }
+
+  .callout {
+    background: #eef2ff;
+    border-left: 4px solid #4a6cf7;
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  .callout strong { color: #1a1a2e; }
+
+  .code-block {
+    background: #1d1d1f;
+    color: #e8e8ed;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+    line-height: 1.5;
+  }
+  .code-block .hl { color: #ffd700; }
+  .code-block .cm { color: #6b8; }
+  .code-block .str { color: #7bf; }
+
+  .btn-spot {
+    display: inline-block;
+    background: #e8e8ed;
+    border: 1.5px dashed #999;
+    border-radius: 6px;
+    padding: 1px 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .annotated-img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e0e0e5;
+    margin: 1rem 0;
+  }
+
+  /* Annotation numbers */
+  .anno-num {
+    display: inline-flex;
+    width: 22px;
+    height: 22px;
+    background: #4a6cf7;
+    color: #fff;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .tip {
+    background: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+    padding: 1rem 1.25rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 20px 12px; }
+    .step { padding: 1.25rem; }
+    h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>📋 RSVP Setup Guide</h1>
+  <p class="subtitle">7 visual steps to connect your wedding site to Google Sheets</p>
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">1</span>
+      <span class="step-title">Create a Google Sheet</span>
+    </div>
+    <p>Open your browser and go to <strong>sheets.new</strong> — this automatically creates a blank spreadsheet.</p>
+
+    <div class="mockup">
+      <div class="mockup-title">📍 What you'll see in the URL bar:</div>
+      <div class="code-block" style="font-size:0.8rem; word-break: break-all;">
+        https://docs.google.com/spreadsheets/d/<span class="hl">1aBcDeFgHiJkLmNoPqRsTuVwXyZ123456789</span>/edit
+      </div>
+      <p style="margin-top:0.5rem; font-size:0.85rem;">
+        The long string between <code>/d/</code> and <code>/edit</code> is your <strong>Spreadsheet ID</strong>.
+        <span style="color:#4a6cf7; font-weight:600;">→ Copy this now, you'll need it in Step 3.</span>
+      </p>
+    </div>
+
+    <div class="tip">
+      💡 <strong>Tip:</strong> Rename your sheet tab (bottom-left) from "Sheet1" to <strong>RSVPs</strong> so it matches the code.
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">2</span>
+      <span class="step-title">Open the Apps Script Editor</span>
+    </div>
+    <p>Inside your Google Sheet, click the <strong>Extensions</strong> menu, then <strong>Apps Script</strong>.</p>
+
+    <div class="mockup">
+      <div class="mockup-title">🧭 The menu path:</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin:10px 0;">
+        <span style="background:#f0f0f5; padding:6px 14px; border-radius:6px; font-weight:500;">Extensions</span>
+        <span style="color:#999; font-size:1.2rem;">→</span>
+        <span style="background:#f0f0f5; padding:6px 14px; border-radius:6px; font-weight:500;">Apps Script</span>
+      </div>
+      <p style="font-size:0.85rem; color:#666;">
+        This opens a new browser tab with the Apps Script editor. It starts with a default empty function.
+      </p>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">3</span>
+      <span class="step-title">Paste the Code &amp; Add Your Sheet ID</span>
+    </div>
+    <p>
+      Delete the default <code>function myFunction() { }</code> that appears.
+      Open the <strong>apps-script.gs</strong> file from the project folder and paste the entire contents.
+    </p>
+
+    <div class="callout">
+      <strong>✏️ IMPORTANT:</strong> Find this line in the code and replace <code>YOUR_SPREADSHEET_ID_HERE</code>
+      with the ID you copied in Step 1.
+    </div>
+
+    <div class="code-block" style="font-size:0.82rem;">
+      <span class="cm">// Replace this with your Google Sheet's ID</span><br>
+      const SPREADSHEET_ID = '<span class="hl">1aBcDeFgHiJkLmNoPqRsTuVwXyZ123456789</span>';
+    </div>
+
+    <p style="font-size:0.85rem; color:#555;">
+      (Don't worry — the sheet ID isn't secret. It's the same ID that's already in the URL of your sheet.)
+    </p>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">4</span>
+      <span class="step-title">Save the Project</span>
+    </div>
+    <p>
+      Click the <strong>Save</strong> icon (💾) or press <strong>Cmd+S</strong> (Mac) / <strong>Ctrl+S</strong> (Windows).
+    </p>
+
+    <div class="mockup">
+      <div class="mockup-title">📁 Name your project:</div>
+      <div style="background:#fff; border:1px solid #ddd; border-radius:8px; padding:12px;">
+        <div style="font-weight:500; margin-bottom:4px;">Project title (top-left of editor):</div>
+        <div style="background:#f8f8fa; border:1px solid #e0e0e5; border-radius:6px; padding:8px 12px; font-size:0.9rem;">
+          Wedding RSVP Backend
+        </div>
+      </div>
+      <p style="margin-top:8px; font-size:0.85rem; color:#666;">
+        Call it whatever you want — this is just for your own reference.
+      </p>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">5</span>
+      <span class="step-title">Deploy as a Web App</span>
+    </div>
+    <p>This is the most important step. Click the <strong>Deploy</strong> button, then <strong>New Deployment</strong>.</p>
+
+    <div class="mockup">
+      <div class="mockup-title">⚙️ The deployment settings:</div>
+      <div style="background:#fff; border:1px solid #ddd; border-radius:8px; padding:16px;">
+
+        <div style="margin-bottom:12px;">
+          <div style="font-size:0.8rem; color:#888; margin-bottom:4px;">① Click the dropdown:</div>
+          <div style="background:#f8f8fa; border:1px solid #e0e0e5; border-radius:6px; padding:8px 12px;">
+            <span style="font-weight:600;">Select type</span>
+            <span style="color:#999;"> → </span>
+            <span style="background:#4a6cf7; color:#fff; padding:2px 10px; border-radius:4px; font-size:0.85rem;">Web app</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom:12px;">
+          <div style="font-size:0.8rem; color:#888; margin-bottom:4px;">② Execute as:</div>
+          <div style="background:#f8f8fa; border:1px solid #e0e0e5; border-radius:6px; padding:8px 12px;">
+            <strong>Me</strong> <span style="color:#999; font-size:0.85rem;">(your email)</span>
+            <span style="color:#2e7d32; font-size:0.8rem; margin-left:8px;">✓ correct</span>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size:0.8rem; color:#888; margin-bottom:4px;">③ Who has access:</div>
+          <div style="background:#f8f8fa; border:1px solid #e0e0e5; border-radius:6px; padding:8px 12px;">
+            <strong>Anyone</strong>
+            <span style="color:#2e7d32; font-size:0.8rem; margin-left:8px;">✓ correct</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>⚠️ When you click "Deploy",</strong> Google will ask you to review permissions.
+      It'll say "This app isn't verified" — <strong>this is normal</strong> for personal projects.
+      Click <strong>"Review Permissions"</strong> → choose your Google account → click <strong>"Advanced"</strong> →
+      <strong>"Go to [Project Name] (unsafe)"</strong> → <strong>"Allow"</strong>.
+      <br><br>
+      <em>Why does it say "unsafe"? Because the app isn't reviewed by Google. You wrote the code yourself —
+      it only writes RSVPs to your own sheet. It's safe.</em>
+    </div>
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">6</span>
+      <span class="step-title">Copy Your Web App URL</span>
+    </div>
+    <p>After deploying, a dialog box appears with your <strong>Web App URL</strong>. It looks like this:</p>
+
+    <div class="code-block" style="font-size:0.85rem; word-break: break-all;">
+      https://script.google.com/macros/s/<span class="hl">AKfycbxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>/exec
+    </div>
+
+    <div class="tip">
+      💡 <strong>Copy this URL now!</strong> If you close the dialog, you won't see it again.
+      (You can find it later via Deploy &rarr; Manage Deployments, but it's easier to copy now.)
+    </div>
+  </div>
+
+  <!-- Step 7 -->
+  <div class="step">
+    <div class="step-header">
+      <span class="step-number">7</span>
+      <span class="step-title">Connect the URL to Your Website</span>
+    </div>
+    <p>
+      Open <strong>index.html</strong> from the project folder in a text editor (like TextEdit or VS Code).
+      Find this line and paste your URL:
+    </p>
+
+    <div class="code-block" style="font-size:0.82rem;">
+      <span class="cm">// Change this line (around line 247):</span><br>
+      const APPS_SCRIPT_URL = '<span class="str">https://script.google.com/macros/s/AKfycb.../exec</span>';
+    </div>
+
+    <p style="margin-bottom:0.5rem;">After that:</p>
+    <ul>
+      <li><strong>Test it:</strong> Open <code>index.html</code> in your browser, fill out the form, submit.</li>
+      <li><strong>Check your sheet:</strong> Go back to your Google Sheet — you should see a new row with the data.</li>
+      <li><strong>Host it:</strong> Drag the <code>wedding-rsvp</code> folder to <a href="https://netlify.com/drop" target="_blank">Netlify Drop</a> for a free, instant URL.</li>
+    </ul>
+  </div>
+
+  <!-- Final Check -->
+  <div class="step" style="background:#1a1a2e; color:#f0f0f5;">
+    <div class="step-header">
+      <span class="step-number" style="background:#c9a96e; color:#1a1a2e;">✓</span>
+      <span class="step-title" style="color:#fff;">Done — You're Live!</span>
+    </div>
+    <p style="color:#ccc;">
+      That's it. Every time a guest submits the RSVP form, a new row appears in your Google Sheet.
+      No database, no server, no monthly fees.
+    </p>
+    <p style="color:#999; margin-top:1rem; font-size:0.85rem;">
+      You can check RSVPs anytime by just opening your Google Sheet — no tech skills needed.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

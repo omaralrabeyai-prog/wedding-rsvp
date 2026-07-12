@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#A7B49C;color:#000;line-height:1.7;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,.script{font-family:'Playfair Display',serif}
+h2{font-size:2rem;font-weight:600;text-align:center;margin-bottom:0.75rem;color:#1a1a2e}
+.container{max-width:680px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+section{padding:2rem 0;position:relative}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 1.5rem;background:linear-gradient(180deg,#9fad92 0%,#95a688 100%);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.12) 100%);pointer-events:none;z-index:0}
+.petals{position:fixed;inset:0;pointer-events:none;z-index:1}
+.petal{position:absolute;width:8px;height:8px;border-radius:70% 30% 50% 40%;opacity:0;animation:petalFall var(--d,12s) ease-in var(--dd,0s) infinite}
+.petal:nth-child(7n+1){background:#f5b0b0}
+.petal:nth-child(7n+2){background:#faf0e8}
+.petal:nth-child(7n+3){background:#fad0d0}
+.petal:nth-child(7n+4){background:#fff5ee}
+.petal:nth-child(7n+5){background:#f0c0c0}
+.petal:nth-child(7n+6){background:#b8c4a0}
+.petal:nth-child(7n+7){background:#d4c9a3}
+@keyframes petalFall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}10%{opacity:0.95}90%{opacity:0.5}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.petal:nth-child(1){left:5%;--d:14s;--dd:0s}
+.petal:nth-child(2){left:15%;--d:18s;--dd:2s;width:6px;height:6px}
+.petal:nth-child(3){left:25%;--d:16s;--dd:4s;width:10px;height:10px}
+.petal:nth-child(4){left:40%;--d:20s;--dd:1s;width:7px;height:7px}
+.petal:nth-child(5){left:55%;--d:15s;--dd:3s;width:9px;height:9px}
+.petal:nth-child(6){left:65%;--d:19s;--dd:5s;width:6px;height:6px}
+.petal:nth-child(7){left:78%;--d:17s;--dd:0.5s;width:8px;height:8px}
+.petal:nth-child(8){left:88%;--d:21s;--dd:3.5s;width:7px;height:7px}
+.petal:nth-child(9){left:35%;--d:13s;--dd:6s;width:5px;height:5px}
+.petal:nth-child(10){left:72%;--d:22s;--dd:2.5s;width:8px;height:8px}
+.petal:nth-child(11){left:10%;--d:15s;--dd:1.2s;width:7px;height:7px}
+.petal:nth-child(12){left:32%;--d:17s;--dd:3.5s;width:9px;height:9px}
+.petal:nth-child(13){left:48%;--d:14s;--dd:5s;width:6px;height:6px}
+.petal:nth-child(14){left:60%;--d:20s;--dd:0.8s;width:8px;height:8px}
+.petal:nth-child(15){left:82%;--d:16s;--dd:4.5s;width:7px;height:7px}
+.petal:nth-child(16){left:92%;--d:18s;--dd:6.5s;width:5px;height:5px}
+.petal:nth-child(17){left:3%;--d:13s;--dd:2s;width:6px;height:6px}
+.petal:nth-child(18){left:18%;--d:19s;--dd:0.3s;width:8px;height:8px}
+.petal:nth-child(19){left:22%;--d:16s;--dd:7s;width:5px;height:5px}
+.petal:nth-child(20){left:28%;--d:21s;--dd:1.5s;width:7px;height:7px}
+.petal:nth-child(21){left:36%;--d:14s;--dd:4s;width:9px;height:9px}
+.petal:nth-child(22){left:42%;--d:18s;--dd:6s;width:6px;height:6px}
+.petal:nth-child(23){left:50%;--d:15s;--dd:2.5s;width:8px;height:8px}
+.petal:nth-child(24){left:56%;--d:22s;--dd:0.8s;width:5px;height:5px}
+.petal:nth-child(25){left:63%;--d:17s;--dd:5.5s;width:7px;height:7px}
+.petal:nth-child(26){left:68%;--d:13s;--dd:3s;width:9px;height:9px}
+.petal:nth-child(27){left:75%;--d:20s;--dd:1s;width:6px;height:6px}
+.petal:nth-child(28){left:80%;--d:16s;--dd:6.5s;width:8px;height:8px}
+.petal:nth-child(29){left:85%;--d:19s;--dd:3.5s;width:5px;height:5px}
+.petal:nth-child(30){left:90%;--d:14s;--dd:0.5s;width:7px;height:7px}
+.petal:nth-child(31){left:95%;--d:21s;--dd:4.5s;width:6px;height:6px}
+.petal:nth-child(32){left:98%;--d:18s;--dd:2s;width:8px;height:8px}
+.petal:nth-child(33){left:8%;--d:15s;--dd:1.8s;width:7px;height:7px}
+.petal:nth-child(34){left:20%;--d:17s;--dd:5.5s;width:6px;height:6px}
+.petal:nth-child(35){left:30%;--d:19s;--dd:2.2s;width:8px;height:8px}
+.petal:nth-child(36){left:38%;--d:14s;--dd:7s;width:5px;height:5px}
+.petal:nth-child(37){left:45%;--d:16s;--dd:3.5s;width:9px;height:9px}
+.petal:nth-child(38){left:52%;--d:21s;--dd:0.5s;width:6px;height:6px}
+.petal:nth-child(39){left:58%;--d:13s;--dd:4s;width:7px;height:7px}
+.petal:nth-child(40){left:70%;--d:18s;--dd:6s;width:8px;height:8px}
+.petal:nth-child(41){left:76%;--d:20s;--dd:1.5s;width:5px;height:5px}
+.petal:nth-child(42){left:88%;--d:15s;--dd:4.8s;width:7px;height:7px}
+
+/* Hero decorations - all behind */
+.hero-deco{position:absolute;pointer-events:none;z-index:0}
+
+/* Full-frame design cover overlay */
+.hero__frame-cover{position:absolute;inset:4%;width:92%;height:92%;object-fit:contain;pointer-events:none;z-index:1;opacity:0.9}
+
+/* ChatGPT background image */
+.hero__bg-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;opacity:0.27}
+
+/* ── COUPLE ── */
+
+.hero__names{font-family:'Playfair Display',serif;font-size:clamp(3rem,7.2vw,4.8rem);font-weight:600;color:#fff;line-height:1.2;margin-bottom:0.5rem;margin-left:-20px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.hero__ampersand{display:inline;font-size:clamp(1.2rem,2.4vw,1.5rem);font-family:'Playfair Display',serif;font-weight:600;color:#fff;margin:0 0.4rem;letter-spacing:0.1em}
+.hero__date{font-family:'Inter',sans-serif;font-size:1.32rem;font-weight:300;color:#fff;letter-spacing:0.15em;margin-top:1rem;position:relative;z-index:1}
+.hero__scroll{margin-top:2.5rem;font-family:'Inter',sans-serif;color:#fff;font-size:0.96rem;letter-spacing:0.1em;animation:float 2s ease-in-out infinite;position:relative;z-index:1}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.scatter-side{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.scatter-side::after{content:'';position:absolute;inset:0;background-image:
+radial-gradient(5px 5px at 4% 8%,rgba(255,255,255,0.2) 50%,transparent 50%),
+radial-gradient(4px 4px at 2% 22%,rgba(255,255,255,0.15) 50%,transparent 50%),
+radial-gradient(3px 3px at 6% 38%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(4px 4px at 3% 52%,rgba(255,255,255,0.18) 50%,transparent 50%),
+radial-gradient(5px 5px at 5% 68%,rgba(255,255,255,0.2) 50%,transparent 50%),
+radial-gradient(3px 3px at 2% 82%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(4px 4px at 96% 12%,rgba(255,255,255,0.18) 50%,transparent 50%),
+radial-gradient(3px 3px at 98% 28%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(5px 5px at 95% 42%,rgba(255,255,255,0.2) 50%,transparent 50%),
+radial-gradient(4px 4px at 97% 58%,rgba(255,255,255,0.15) 50%,transparent 50%),
+radial-gradient(3px 3px at 94% 72%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(4px 4px at 96% 88%,rgba(255,255,255,0.18) 50%,transparent 50%);
+background-size:100% 100%;background-repeat:no-repeat}
+@media(max-width:768px){.scatter-side{display:none}}
+
+/* ── SECTION DIVIDERS ── */
+.section-divider{padding:0.2rem 0;text-align:center;position:relative;z-index:0}
+.divider-img{max-width:600px;width:100%;height:auto;opacity:0.7;display:inline-block}
+@media(max-width:480px){.divider-img{max-width:200px}}
+
+/* ── COUPLE ── */
+.couple{display:flex;flex-direction:column;align-items:center;gap:2rem;text-align:center;position:relative}
+.couple__photos{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.couple__photo-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.couple__photo-placeholder{width:170px;height:170px;border-radius:50%;background:#dae0ce;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.06);position:relative;overflow:hidden;z-index:1}
+.couple__photo-placeholder img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.couple__frame{position:absolute;width:310px;height:auto;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:0.6}
+.couple__text{max-width:520px;font-family:'Inter',sans-serif;color:#000;font-weight:300;font-size:1.1rem;line-height:1.9}
+
+/* ── DETAILS CARDS ── */
+.details__card{background:#faf8f5;border-radius:16px;padding:2.5rem 2rem;text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.04);margin-bottom:1.5rem;position:relative;overflow:hidden}
+.details__card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a96e,#b8943e,#c9a96e,transparent);opacity:0.4}
+.details__card:last-child{margin-bottom:0}
+.details__card-floral{position:absolute;pointer-events:none;opacity:0.28;z-index:0}
+.details__card-floral--tl{top:5px;left:5px;width:50px;height:50px}
+.details__card-floral--br{bottom:5px;right:5px;width:50px;height:50px;transform:rotate(180deg)}
+@media(max-width:480px){.details__card-floral{display:none}}
+.details__icon{font-size:1.5rem;margin-bottom:0.75rem;position:relative;z-index:1}
+.details__label{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.15em;color:#c9a96e;font-weight:500;margin-bottom:0.25rem;position:relative;z-index:1}
+.details__value{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:#1a1a2e;position:relative;z-index:1}
+
+/* ── SCHEDULE ── */
+.schedule__item{display:flex;gap:1.5rem;padding:1.25rem 0;border-bottom:1px solid #b0c4a4;position:relative;padding-left:28px}
+.schedule__item::before{content:'✦';position:absolute;left:0;top:1.4rem;font-size:0.65rem;color:#c9a96e;opacity:0.5}
+.schedule__item:last-child{border-bottom:none}
+.schedule__time{min-width:80px;font-family:'Playfair Display',serif;font-size:1.1rem;color:#c9a96e}
+.schedule__desc h3{font-size:1rem;font-weight:600;margin-bottom:0.15rem}
+.schedule__desc p{font-size:0.9rem;color:#000;font-weight:300}
+
+/* ── RSVP ── */
+.rsvp{background:#faf8f5;border-radius:16px;padding:2.5rem 2rem;box-shadow:0 2px 20px rgba(0,0,0,0.04);position:relative;overflow:hidden}
+.rsvp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a96e,#b8943e,#c9a96e,transparent);opacity:0.4}
+.form-group{margin-bottom:1.5rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:500;color:#000;margin-bottom:0.4rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:0.75rem 1rem;border:1.5px solid #b0c4a4;border-radius:10px;font-family:'Inter',sans-serif;font-size:0.95rem;background:#dae0ce;outline:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#c9a96e;outline:2px solid rgba(201,169,110,0.3);outline-offset:1px}
+@media(max-width:480px){.form-group input:focus,.form-group textarea:focus,.form-group select:focus{outline-offset:0}}
+.form-group textarea{resize:vertical;min-height:80px}
+.radio-group{display:flex;gap:1rem;margin-top:0.3rem}
+.radio-group label{flex:1;display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.75rem 1rem;border:1.5px solid #b0c4a4;border-radius:10px;cursor:pointer;background:#dae0ce;font-size:0.9rem;font-weight:500}
+.radio-group input[type="radio"]{display:none}
+.radio-group label:has(input:checked){border-color:#c9a96e;background:#f6f0e8}
+.btn-submit{width:100%;padding:1rem;background:#1a1a2e;color:#fff;border:none;border-radius:10px;font-family:'Playfair Display',serif;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.6rem}
+@media(hover:hover){.btn-submit:hover{background:#2a2a4e}}
+.btn-submit .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-submit.loading .spinner{display:inline-block}
+.form-status{display:none;text-align:center;padding:1rem;border-radius:10px;margin-bottom:1rem;font-size:0.9rem}
+.form-status.success{display:block;background:#eaf6e8;color:#2d6a2d}
+.form-status.error{display:block;background:#fde8e8;color:#a33}
+
+/* ── PHOTOS UPLOAD ── */
+.upload-zone{background:#faf8f5;border:2px dashed #b0c4a4;border-radius:16px;padding:3rem 2rem;text-align:center;cursor:pointer;transition:all 0.3s}
+.upload-zone:hover,.upload-zone.dragover{border-color:#c9a96e;background:#dae0ce}
+@media(hover:none){.upload-zone:hover{background:#faf8f5;border-color:#b0c4a4}}
+.upload-zone__icon{font-size:2.5rem;margin-bottom:1rem;opacity:0.6}
+.upload-zone__text{font-size:1.1rem;color:#000;font-weight:500;margin-bottom:0.3rem}
+.upload-zone__hint{font-size:0.85rem;color:#000;font-weight:300}
+.upload-zone input[type="file"]{display:none}
+.upload-status{display:none;margin-top:1rem;padding:0.75rem 1rem;border-radius:10px;font-size:0.9rem}
+.upload-status.success{display:block;background:#eaf6e8;color:#2d6a2d}
+.upload-status.error{display:block;background:#fde8e8;color:#a33}
+
+/* ── MAP ── */
+.map-container{width:100%;height:400px;border-radius:16px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.04);border:1px solid #b0c4a4}
+.map-container .maplibregl-popup-content{font-family:'Inter',sans-serif;border-radius:10px!important;padding:16px 20px!important}
+.map-container .maplibregl-popup-content h3{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:600;color:#1a1a2e;margin-bottom:2px}
+.map-container .maplibregl-popup-content p{font-size:0.85rem;color:#000;font-weight:300;margin:0}
+.map-container .maplibregl-popup-content .popup-directions{display:inline-block;margin-top:8px;font-size:0.8rem;color:#c9a96e;font-weight:500;text-decoration:none}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:3rem 1.5rem;color:#000;font-size:0.8rem;font-weight:300;border-top:1px solid rgba(201,169,110,0.25)}
+@media(max-width:768px){
+.scatter-side{display:none}
+.petal:nth-child(n+15){display:none}
+}
+
+/* ── TABLET & BELOW ── */
+@media(max-width:640px){
+h2{font-size:1.6rem}
+.hero{min-height:100dvh;padding:2.5rem 1rem}
+.hero__names{font-size:clamp(2.2rem,8vw,3.6rem);margin-left:0}
+.hero__date{font-size:1.1rem;margin-top:0.8rem}
+.hero__scroll{margin-top:2rem;font-size:0.85rem}
+.couple__text{font-size:1rem;line-height:1.85}
+.couple__text p:last-child{font-size:1rem;line-height:1.85}
+.schedule__item{padding:1rem 0;padding-left:24px}
+.map-container{height:300px}
+footer{padding:2rem 1rem}
+}
+
+/* ── MOBILE ── */
+@media(max-width:480px){
+section{padding:1.5rem 0}
+.hero{min-height:100dvh;padding:2rem 0.75rem;gap:0}
+.hero__names{font-size:clamp(1.8rem,7.5vw,2.8rem);margin-bottom:0.3rem}
+.hero__date{font-size:0.95rem;letter-spacing:0.12em;margin-top:0.6rem}
+.hero__scroll{margin-top:1.5rem;font-size:0.8rem}
+.hero__frame-cover{inset:2%;width:96%;height:96%}
+.details__card{padding:1.5rem}
+.details__card-floral{display:none}
+.details__value{font-size:1.05rem}
+.rsvp{padding:1.5rem}
+.schedule__item{flex-direction:column;gap:0.15rem;padding:1rem 0;padding-left:20px}
+.schedule__item::before{top:1.1rem}
+.schedule__time{min-width:unset;font-size:1rem}
+.schedule__desc h3{font-size:0.95rem}
+.schedule__desc p{font-size:0.85rem}
+.radio-group{flex-direction:column;gap:0.75rem}
+.radio-group label{padding:0.9rem 1rem;font-size:0.95rem}
+.form-group input,.form-group textarea{padding:0.8rem 0.9rem;font-size:1rem}
+.form-group label{font-size:0.9rem}
+.btn-submit{padding:0.9rem;font-size:1.05rem;min-height:48px}
+.map-container{height:260px;border-radius:12px}
+.upload-zone{padding:2rem 1.5rem}
+.upload-zone__text{font-size:1rem}
+.upload-zone__hint{font-size:0.8rem}
+.upload-zone__icon{font-size:2rem}
+footer{padding:1.5rem 1rem;font-size:0.75rem}
+footer p{font-size:0.9rem!important}
+.couple__text{font-size:0.95rem;line-height:1.8}
+.couple__text p:last-child{font-size:0.95rem;line-height:1.8;margin-top:1rem}
+.divider-img{max-width:160px}
+.container{padding:0 1rem}
+section{padding:1.25rem 0}
+}
+
+/* ── SMALL PHONES ── */
+@media(max-width:375px){
+.hero__names{font-size:clamp(1.5rem,6.5vw,2rem)}
+.hero__date{font-size:0.85rem}
+.hero__scroll{font-size:0.75rem;margin-top:1rem}
+h2{font-size:1.4rem}
+.container{padding:0 0.75rem}
+.details__card{padding:1rem}
+.rsvp{padding:1rem}
+.schedule__item{padding:0.85rem 0;padding-left:16px}
+.upload-zone{padding:1.5rem 1rem}
+.couple__text{font-size:0.9rem}
+.couple__text p:last-child{font-size:0.9rem}
+.map-container{height:220px}
+footer{padding:1rem 0.75rem}
+section{padding:1rem 0}
+}
+
+/* ── BOTTOM LOGO MOBILE ── */
+@media(max-width:480px){
+.bottom-logo{margin-top:-3vh;padding:0.5rem 0 1.5rem}
+.bottom-logo img{width:40%;max-width:150px}
+}
+@media(max-width:375px){
+.bottom-logo{margin-top:-2vh;padding:0.25rem 0 1rem}
+.bottom-logo img{width:45%;max-width:110px}
+}
+</style>
+</head>
+<body>
+
+<div class="petals">
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top">
+<!-- Full-frame design cover overlay -->
+<img src="images/V2_floral_frame_transparent.png" alt="" class="hero__frame-cover" />
+<img src="images/chatgpt-bg.png" alt="" class="hero__bg-image" />
+
+<h1 class="hero__names">Omar <span class="hero__ampersand">&amp;</span> Aya</h1>
+<p class="hero__date">3.10.2026 &middot; Cairo, Egypt</p>
+<p class="hero__scroll">Scroll to RSVP ↓</p>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" /></div>
+
+<!-- STORY -->
+<section id="story">
+<div class="scatter-side"></div>
+<div class="container">
+<h2>Our Story</h2>
+<div class="couple">
+<div class="couple__single-photo" style="position:relative;display:inline-block">
+<img src="images/Frame ovale.png" alt="" style="width:100%;max-width:400px;height:auto;pointer-events:none;z-index:0;position:relative" />
+<div style="position:absolute;inset:12%;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:50%;z-index:1">
+<img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_43_19%20AM.png" alt="Omar & Aya" style="width:100%;height:100%;object-fit:cover;display:block" />
+</div>
+</div>
+<div class="couple__text"><p>Once upon a time, two university students named Omar and Aya crossed paths and became friends. Life, as it often does, had other plans, and after graduation, we went our separate ways for two whole years. Then, out of nowhere, Omar decided to send a message. One conversation turned into many, friendship turned into something much more, and before we knew it, a year had flown by. So here we are, with a love story that took a little detour, and somehow led us exactly where we were meant to be. And now... we're getting marrieddddd.</p>
+<p style="direction:rtl;text-align:center;font-family:'Noto Naskh Arabic','Traditional Arabic',serif;font-size:1.05rem;line-height:2;margin-top:1.5rem">كان يا ما كان، في اتنين طلبة جامعة اسمهم عمر وآية اتقابلوا وبقوا أصحاب. وبعد التخرج، الحياة خدت كل واحد في طريق، وبعدنا عن بعض لمدة سنتين كاملين.<br>وفجأة ومن غير أي مقدمات، عمر قرر يبعت رسالة. رسالة وراها كلام كتير، والكلام بقى صداقة من جديد، والصداقة بقت حاجة أكبر وأجمل بكتير. وقبل ما نحس، سنة كاملة عدت.<br>ولقينا نفسنا في قصة حب أخدت لفة صغيرة، لكن في الآخر وصلت بينا للمكان اللي كان مكتوبلنا نكون فيه من البداية.<br>ودلوقتي... إحنا بنتجوززززز</p></div>
+</div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" /></div>
+
+<!-- DETAILS -->
+<section id="details">
+<div class="scatter-side"></div>
+<div class="container">
+<h2>Event Details</h2>
+<div class="details__card">
+<svg class="details__card-floral details__card-floral--tl" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<svg class="details__card-floral details__card-floral--br" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<div class="details__icon">📅</div><div class="details__label">Date</div><div class="details__value">3rd, October, 2026</div></div>
+<div class="details__card">
+<svg class="details__card-floral details__card-floral--tl" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<svg class="details__card-floral details__card-floral--br" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<div class="details__icon">📍</div><div class="details__label">Venue</div><div class="details__value">Republican Guards Club</div><div style="margin-top:0.5rem"><a href="https://maps.app.goo.gl/oVr88veLSz3FyQbf8" target="_blank" style="color:#c9a96e;font-size:0.85rem;font-weight:500;text-decoration:none">Open in Google Maps →</a></div></div>
+<div class="details__card">
+<svg class="details__card-floral details__card-floral--tl" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<svg class="details__card-floral details__card-floral--br" viewBox="0 0 50 50"><path d="M5 45Q3 35 8 28Q12 22 18 18" stroke="#c9a96e" stroke-width="1" fill="none"/><path d="M18 18C20 14 24 12 23 16C26 15 27 18 25 20C27 22 25 25 23 23C21 26 18 24 19 21C16 22 14 19 17 17Z" fill="#c9a96e"/><circle cx="20" cy="20" r="1.5" fill="#b8943e"/><path d="M8 35Q14 32 12 36Z" fill="#c9a96e"/></svg>
+<div class="details__icon">👔</div><div class="details__label">Dress Code</div><div class="details__value">Black Tie / Glam</div></div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" /></div>
+
+<!-- MAP -->
+<section id="venue-map"><div class="container">
+<h2>Find the Venue</h2>
+<div id="map" class="map-container"></div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" /></div>
+
+<!-- SCHEDULE -->
+<section id="schedule"><div class="container">
+<h2>Schedule</h2>
+<div class="details__card" style="text-align:left">
+<div class="schedule__item"><div class="schedule__time">7:00 PM</div><div class="schedule__desc"><h3>Ceremony</h3><p>Venue location or details</p></div></div>
+<div class="schedule__item"><div class="schedule__time">7:30 PM</div><div class="schedule__desc"><h3>Cocktail Hour</h3><p>Drinks and appetizers</p></div></div>
+<div class="schedule__item"><div class="schedule__time">8:30 PM</div><div class="schedule__desc"><h3>Reception &amp; Dinner</h3><p>Dinner, speeches, and dancing</p></div></div>
+</div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" /></div>
+
+<!-- RSVP -->
+<section id="rsvp"><div class="container">
+<h2>RSVP</h2>
+<p style="text-align:center;font-weight:300;color:#000;margin-bottom:2rem">Kindly respond by 3.9.2026</p>
+<form class="rsvp" id="rsvp-form" novalidate>
+<div class="form-status" id="form-status"></div>
+<div class="form-group"><label for="name">Your Name(s) *</label><input type="text" id="name" name="name" placeholder="e.g. John &amp; Jane Smith" required /></div>
+<div class="form-group"><label>Will you be attending? *</label>
+<div class="radio-group" id="attending-group">
+<label><input type="radio" name="attending" value="yes" /><span>✅ Yes, we'll be there!</span></label>
+<label><input type="radio" name="attending" value="no" /><span>❌ Regretfully decline</span></label>
+</div></div>
+<div class="form-group"><label for="message">A message for the couple</label><textarea id="message" name="message" placeholder="Leave a note if you'd like..."></textarea></div>
+<button type="submit" class="btn-submit" id="submit-btn"><span class="spinner"></span><span class="btn-text">Send RSVP</span></button>
+</form>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" /></div>
+
+<!-- PHOTOS -->
+<section id="photos"><div class="container">
+<h2>Photos</h2>
+<p style="text-align:center;font-weight:300;color:#000;margin-bottom:2rem">Share photos from the day — we'll be able to download and keep them.</p>
+<div class="upload-zone" id="upload-zone">
+<div class="upload-zone__icon">📸</div>
+<div class="upload-zone__text">Upload Photos</div>
+<div class="upload-zone__hint">or drag and drop here</div>
+<input type="file" id="file-input" accept="image/*,video/*" multiple />
+<div class="upload-status" id="upload-status"></div>
+</div>
+<p style="text-align:center;font-weight:600;color:#f0f0e8;margin-top:1.5rem;font-size:0.9rem">Guests can add photos &amp; Videos, only the couple can delete them.</p>
+</div></section>
+
+<footer><div class="container">
+<p style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:300;color:#000">We can't wait to celebrate with you!</p>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0818449];const m=new maplibregl.Map({container:'map',style:'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',center:c,zoom:15,pitch:45,bearing:-10,attributionControl:false});m.addControl(new maplibregl.AttributionControl({compact:true}));m.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');const e=document.createElement('div');e.innerHTML='<svg width="36" height="44" viewBox="0 0 36 44" fill="none"><path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 26 18 26s18-12.5 18-26C36 8.06 27.94 0 18 0zm0 24.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5 6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5z" fill="#c9a96e"/><circle cx="18" cy="18" r="5" fill="#fff"/></svg>';e.style.cursor='pointer';new maplibregl.Marker({element:e}).setLngLat(c).setPopup(new maplibregl.Popup({offset:28,closeButton:true}).setHTML('<h3>Republican Guards Club</h3><p>Omar & Aya\'s Wedding</p><p>3rd October, 2026 • 7:00 PM</p><a class="popup-directions" href="https://maps.google.com/?daddr=30.0818449,31.3153720" target="_blank">Get Directions →</a>')).addTo(m)});
+</script>
+<script>
+(function(){const z=document.getElementById('upload-zone'),i=document.getElementById('file-input'),s=document.getElementById('upload-status');if(!z)return;z.addEventListener('click',function(e){if(e.target.tagName!=='INPUT')i.click()});i.addEventListener('change',function(){if(this.files.length)h(this.files)});z.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('dragover')});z.addEventListener('dragleave',function(){this.classList.remove('dragover')});z.addEventListener('drop',function(e){e.preventDefault();this.classList.remove('dragover');if(e.dataTransfer.files.length)h(e.dataTransfer.files)});function h(f){s.textContent='✅ Thanks! Your photos have been received.';s.className='upload-status success'}})();
+</script>
+<script>
+(function(){const f=document.getElementById('rsvp-form'),s=document.getElementById('form-status'),b=document.getElementById('submit-btn'),bt=b.querySelector('.btn-text');if(!f)return;const U='https://script.google.com/macros/s/AKfycbxhKF_KYrf7ExJ23B48cM8fteI7awzFx5809ETbRS7Rs408EHG0nfbM_zCJCorw9XXi/exec';f.addEventListener('submit',async function(e){e.preventDefault();const n=document.getElementById('name').value.trim(),a=document.querySelector('input[name="attending"]:checked'),m=document.getElementById('message').value.trim();if(!n||!a){t('Please fill in your name and RSVP status.','error');return}const d={name:n,attending:a.value,message:m,timestamp:new Date().toISOString()};if(U==='YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'){t('✅ RSVP received! (Test mode)','success');f.reset();return}b.disabled=true;b.classList.add('loading');bt.textContent='Sending...';t('Sending your RSVP...','sending');try{await fetch(U,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)});t('✅ Your RSVP has been sent! Thank you!','success');f.reset()}catch(e){t('❌ Something went wrong. Please try again.','error')}finally{b.classList.remove('loading');b.disabled=false;bt.textContent='Send RSVP'}});function t(m,tp){s.textContent=m;s.className='form-status '+tp;s.style.display='block'}})();
+</script>
+<div class="bottom-logo" style="text-align:center;width:100%;overflow:hidden;line-height:0;padding:1rem 0 2rem;margin-top:-5vh">
+<img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_15_23%20AM.png" alt="" style="width:30%;max-width:210px;height:auto;display:inline-block" />
+</div>
+</body>
+</html>

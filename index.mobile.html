@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Omar &amp; Aya · Wedding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Inter',sans-serif;background:#A7B49C;color:#2c2c2c;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
+img{max-width:100%;display:block;height:auto}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,.script{font-family:'Playfair Display',serif}
+h2{font-size:clamp(1.5rem,6vw,2rem);font-weight:600;text-align:center;margin-bottom:0.6rem;color:#1a1a2e;letter-spacing:-0.01em}
+
+/* ── LAYOUT ── */
+.container{width:100%;padding:0 20px;margin:0 auto;position:relative;z-index:1}
+section{padding:clamp(1.5rem,4vw,2.5rem) 0;position:relative}
+
+/* ── HERO (Mobile-first) ── */
+.hero{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 1.25rem;background:linear-gradient(180deg,#9fad92 0%,#95a688 100%);position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.15) 100%);pointer-events:none;z-index:0}
+.hero__frame-cover{position:absolute;left:5%;top:8%;width:90%;height:84%;object-fit:cover;pointer-events:none;z-index:1;opacity:0.85}
+.hero__bg-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;z-index:0;opacity:0.25}
+.hero__names{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,10vw,3.8rem);font-weight:600;color:#fff;line-height:1.15;margin-bottom:0.3rem;position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,0.2);padding:0 0.5rem}
+.hero__ampersand{display:inline;font-size:clamp(1rem,4vw,1.4rem);font-family:'Playfair Display',serif;font-weight:600;color:#fff;margin:0 0.3rem;letter-spacing:0.1em}
+.hero__date{font-family:'Inter',sans-serif;font-size:clamp(0.9rem,3.5vw,1.2rem);font-weight:300;color:#fff;letter-spacing:0.12em;margin-top:0.75rem;position:relative;z-index:1;opacity:0.95}
+.hero__scroll{margin-top:auto;padding-top:2rem;padding-bottom:1rem;font-family:'Inter',sans-serif;color:#fff;font-size:0.85rem;letter-spacing:0.08em;animation:float 2s ease-in-out infinite;position:relative;z-index:1;opacity:0.85}
+
+/* ── FALLING PETALS (Mobile-optimized) ── */
+.petals{position:fixed;inset:0;pointer-events:none;z-index:1}
+.petal{position:absolute;width:6px;height:6px;border-radius:70% 30% 50% 40%;opacity:0;animation:petalFall var(--d,14s) ease-in var(--dd,0s) infinite}
+.petal:nth-child(5n+1){background:#f5b0b0}
+.petal:nth-child(5n+2){background:#faf0e8}
+.petal:nth-child(5n+3){background:#fad0d0}
+.petal:nth-child(5n+4){background:#fff5ee}
+.petal:nth-child(5n+5){background:#f0c0c0}
+@keyframes petalFall{0%{transform:translateY(-15px) rotate(0deg);opacity:0}12%{opacity:0.9}85%{opacity:0.4}100%{transform:translateY(100dvh) rotate(540deg);opacity:0}}
+.petal:nth-child(1){left:4%;--d:15s;--dd:0s}
+.petal:nth-child(2){left:14%;--d:19s;--dd:2s}
+.petal:nth-child(3){left:24%;--d:16s;--dd:4s;width:5px;height:5px}
+.petal:nth-child(4){left:38%;--d:21s;--dd:1s}
+.petal:nth-child(5){left:52%;--d:14s;--dd:3s;width:7px;height:7px}
+.petal:nth-child(6){left:64%;--d:20s;--dd:5s}
+.petal:nth-child(7){left:76%;--d:17s;--dd:0.5s;width:5px;height:5px}
+.petal:nth-child(8){left:86%;--d:22s;--dd:3.5s}
+.petal:nth-child(9){left:34%;--d:13s;--dd:6s}
+.petal:nth-child(10){left:70%;--d:18s;--dd:2.5s;width:7px;height:7px}
+.petal:nth-child(11){left:8%;--d:16s;--dd:1.2s}
+.petal:nth-child(12){left:30%;--d:20s;--dd:3.5s;width:5px;height:5px}
+.petal:nth-child(13){left:46%;--d:14s;--dd:5s}
+.petal:nth-child(14){left:58%;--d:21s;--dd:0.8s;width:7px;height:7px}
+.petal:nth-child(15){left:80%;--d:17s;--dd:4.5s}
+.petal:nth-child(16){left:92%;--d:19s;--dd:6.5s}
+.petal:nth-child(17){left:2%;--d:13s;--dd:2s;width:5px;height:5px}
+.petal:nth-child(18){left:16%;--d:22s;--dd:0.3s}
+.petal:nth-child(19){left:20%;--d:15s;--dd:7s}
+.petal:nth-child(20){left:50%;--d:18s;--dd:1.5s;width:6px;height:6px}
+
+/* ── HERO ANIMATIONS ── */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ── SCATTER SIDE (Mobile friendly) ── */
+.scatter-side{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.scatter-side::after{content:'';position:absolute;inset:0;background-image:
+radial-gradient(4px 4px at 4% 10%,rgba(255,255,255,0.2) 50%,transparent 50%),
+radial-gradient(3px 3px at 3% 28%,rgba(255,255,255,0.15) 50%,transparent 50%),
+radial-gradient(3px 3px at 5% 44%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(4px 4px at 96% 16%,rgba(255,255,255,0.18) 50%,transparent 50%),
+radial-gradient(3px 3px at 97% 34%,rgba(255,255,255,0.12) 50%,transparent 50%),
+radial-gradient(4px 4px at 95% 50%,rgba(255,255,255,0.15) 50%,transparent 50%),
+radial-gradient(3px 3px at 96% 66%,rgba(255,255,255,0.18) 50%,transparent 50%),
+radial-gradient(4px 4px at 94% 82%,rgba(255,255,255,0.12) 50%,transparent 50%);
+background-size:100% 100%;background-repeat:no-repeat}
+
+/* ── SECTION DIVIDERS ── */
+.section-divider{padding:0.15rem 0;text-align:center;position:relative;z-index:0}
+.divider-img{max-width:240px;width:100%;height:auto;opacity:0.6;display:inline-block}
+
+/* ── COUPLE / STORY ── */
+.couple{display:flex;flex-direction:column;align-items:center;gap:1.5rem;text-align:center;position:relative}
+.couple__photos{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.couple__photo-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:45%;max-width:160px}
+.couple__photo-placeholder{width:100%;aspect-ratio:1/1;border-radius:50%;background:#dae0ce;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,0.08);position:relative;overflow:hidden;z-index:1}
+.couple__photo-placeholder img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.couple__frame{position:absolute;width:130%;height:auto;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:0.5}
+.couple__text{width:100%;font-family:'Inter',sans-serif;color:#555;font-weight:300;font-size:clamp(0.95rem,3.2vw,1.1rem);line-height:1.85;padding:0 0.25rem}
+
+/* ── DETAILS CARDS (Mobile) ── */
+.details__card{background:#faf8f5;border-radius:14px;padding:clamp(1.5rem,4vw,2rem);text-align:center;box-shadow:0 2px 20px rgba(0,0,0,0.05);margin-bottom:1rem;position:relative;overflow:hidden}
+.details__card:last-child{margin-bottom:0}
+.details__card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a96e,#b8943e,#c9a96e,transparent);opacity:0.4}
+.details__icon{font-size:clamp(1.3rem,5vw,1.6rem);margin-bottom:0.5rem;position:relative;z-index:1}
+.details__label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.15em;color:#c9a96e;font-weight:600;margin-bottom:0.2rem;position:relative;z-index:1}
+.details__value{font-family:'Playfair Display',serif;font-size:clamp(1rem,4vw,1.2rem);font-weight:600;color:#1a1a2e;position:relative;z-index:1}
+
+/* ── SCHEDULE (Mobile) ── */
+.schedule__item{display:flex;flex-direction:column;gap:0.15rem;padding:1rem 0 1rem 24px;border-bottom:1px solid #b0c4a4;position:relative}
+.schedule__item:last-child{border-bottom:none}
+.schedule__item::before{content:'\u2726';position:absolute;left:0;top:1.05rem;font-size:0.6rem;color:#c9a96e;opacity:0.5}
+.schedule__time{font-family:'Playfair Display',serif;font-size:clamp(1rem,3.5vw,1.1rem);color:#c9a96e;font-weight:600}
+.schedule__desc h3{font-size:clamp(0.95rem,3vw,1rem);font-weight:600;margin-bottom:0.1rem}
+.schedule__desc p{font-size:clamp(0.82rem,2.8vw,0.9rem);color:#777;font-weight:300}
+
+/* ── MAP (Mobile) ── */
+.map-container{width:100%;height:clamp(280px,50vw,360px);border-radius:14px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,0.05);border:1px solid #b0c4a4}
+.map-container .maplibregl-popup-content{font-family:'Inter',sans-serif;border-radius:10px!important;padding:14px 16px!important}
+.map-container .maplibregl-popup-content h3{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;color:#1a1a2e;margin-bottom:2px}
+.map-container .maplibregl-popup-content p{font-size:0.82rem;color:#666;font-weight:300;margin:0}
+.map-container .maplibregl-popup-content .popup-directions{display:inline-block;margin-top:6px;font-size:0.78rem;color:#c9a96e;font-weight:500;text-decoration:none}
+
+/* ── RSVP FORM (Mobile-touch optimised) ── */
+.rsvp{background:#faf8f5;border-radius:14px;padding:clamp(1.5rem,4vw,2rem);box-shadow:0 2px 20px rgba(0,0,0,0.05);position:relative;overflow:hidden}
+.rsvp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a96e,#b8943e,#c9a96e,transparent);opacity:0.4}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:0.85rem;font-weight:500;color:#444;margin-bottom:0.35rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:0.85rem 1rem;border:1.5px solid #b0c4a4;border-radius:12px;font-family:'Inter',sans-serif;font-size:16px;background:#dae0ce;outline:none;-webkit-appearance:none;appearance:none}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:#c9a96e;box-shadow:0 0 0 3px rgba(201,169,110,0.15)}
+.form-group textarea{resize:vertical;min-height:90px}
+.radio-group{display:flex;flex-direction:column;gap:0.65rem;margin-top:0.3rem}
+.radio-group label{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.85rem 1rem;border:1.5px solid #b0c4a4;border-radius:12px;cursor:pointer;background:#dae0ce;font-size:1rem;font-weight:500;min-height:48px;-webkit-tap-highlight-color:transparent;user-select:none}
+.radio-group input[type="radio"]{display:none}
+.radio-group label:has(input:checked){border-color:#c9a96e;background:#f6f0e8}
+.btn-submit{width:100%;padding:0.95rem 1rem;background:#1a1a2e;color:#fff;border:none;border-radius:12px;font-family:'Playfair Display',serif;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.6rem;min-height:52px;-webkit-tap-highlight-color:transparent;user-select:none}
+.btn-submit:active{background:#2a2a4e;transform:scale(0.98)}
+.btn-submit .spinner{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-submit.loading .spinner{display:inline-block}
+.form-status{display:none;text-align:center;padding:0.85rem 1rem;border-radius:10px;margin-bottom:1rem;font-size:0.9rem}
+.form-status.success{display:block;background:#eaf6e8;color:#2d6a2d}
+.form-status.error{display:block;background:#fde8e8;color:#a33}
+
+/* ── PHOTOS UPLOAD (Mobile) ── */
+.upload-zone{background:#faf8f5;border:2px dashed #b0c4a4;border-radius:14px;padding:clamp(2rem,6vw,2.5rem) 1.5rem;text-align:center;cursor:pointer;transition:all 0.3s;-webkit-tap-highlight-color:transparent}
+.upload-zone:active,.upload-zone.dragover{border-color:#c9a96e;background:#dae0ce}
+.upload-zone__icon{font-size:2.2rem;margin-bottom:0.75rem;opacity:0.6}
+.upload-zone__text{font-size:clamp(1rem,3.5vw,1.1rem);color:#444;font-weight:500;margin-bottom:0.25rem}
+.upload-zone__hint{font-size:0.82rem;color:#999;font-weight:300}
+.upload-zone input[type="file"]{display:none}
+.upload-status{display:none;margin-top:1rem;padding:0.75rem 1rem;border-radius:10px;font-size:0.9rem}
+.upload-status.success{display:block;background:#eaf6e8;color:#2d6a2d}
+.upload-status.error{display:block;background:#fde8e8;color:#a33}
+
+/* ── PHOTO DISCLAIMER ── */
+.photo-disclaimer{text-align:center;font-weight:500;color:#f0f0e8;margin-top:1.25rem;font-size:clamp(0.78rem,2.8vw,0.85rem);line-height:1.5}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:2.5rem 1.25rem 3rem;color:#999;font-size:0.78rem;font-weight:300;border-top:1px solid rgba(201,169,110,0.2)}
+footer p{font-family:'Playfair Display',serif;font-size:clamp(0.95rem,3.2vw,1.1rem);font-weight:300;color:#777}
+
+/* ── SAFE AREA PADDING (notch phones) ── */
+@supports(padding:max(0px)){section,footer{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.hero{padding-left:max(1.25rem,env(safe-area-inset-left));padding-right:max(1.25rem,env(safe-area-inset-right));padding-bottom:max(1rem,env(safe-area-inset-bottom))}}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){.petals{display:none}.hero__scroll{animation:none}*{animation-duration:0s!important}}
+</style>
+</head>
+<body>
+
+<!-- PETALS (20 for mobile performance) -->
+<div class="petals">
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top">
+<img src="images/Full frame design cover.png" alt="" class="hero__frame-cover" loading="eager" />
+<img src="images/chatgpt-bg.png" alt="" class="hero__bg-image" loading="eager" />
+
+<h1 class="hero__names">Omar <span class="hero__ampersand">&amp;</span> Aya</h1>
+<p class="hero__date">3.10.2026 &middot; Cairo, Egypt</p>
+<a href="#rsvp" class="hero__scroll" style="text-decoration:none">Tap to RSVP &#8595;</a>
+</section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- STORY -->
+<section id="story">
+<div class="scatter-side"></div>
+<div class="container">
+<h2>Our Story</h2>
+<div class="couple">
+<div class="couple__photos">
+<div class="couple__photo-wrap">
+<img src="images/Frame ovale.png" alt="" class="couple__frame" loading="lazy" />
+<div class="couple__photo-placeholder"><img src="images/omar-portrait.png" alt="Omar" loading="lazy" /></div>
+</div>
+<div class="couple__photo-wrap">
+<img src="images/Frame ovale.png" alt="" class="couple__frame" loading="lazy" />
+<div class="couple__photo-placeholder"><img src="images/omar-aya-2.png" alt="Omar &amp; Aya" loading="lazy" /></div>
+</div>
+</div>
+<div class="couple__text"><p>Once upon a time, two university students named Omar and Aya crossed paths and became friends. Life, as it often does, had other plans, and after graduation, we went our separate ways for two whole years. Then, out of nowhere, Omar decided to send a message. One conversation turned into many, friendship turned into something much more, and before we knew it, a year had flown by. So here we are, with a love story that took a little detour, and somehow led us exactly where we were meant to be. And now... we're getting marrieddddd.</p></div>
+</div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- DETAILS -->
+<section id="details">
+<div class="scatter-side"></div>
+<div class="container">
+<h2>Event Details</h2>
+<div class="details__card">
+<div class="details__icon">&#x1F4C5;</div><div class="details__label">Date</div><div class="details__value">3rd, October, 2026</div></div>
+<div class="details__card">
+<div class="details__icon">&#x1F4CD;</div><div class="details__label">Venue</div><div class="details__value">Republican Guards Club</div><div style="margin-top:0.4rem"><a href="https://maps.app.goo.gl/oVr88veLSz3FyQbf8" target="_blank" style="color:#c9a96e;font-size:0.85rem;font-weight:500;text-decoration:none">Open in Google Maps &#8594;</a></div></div>
+<div class="details__card">
+<div class="details__icon">&#x1F454;</div><div class="details__label">Dress Code</div><div class="details__value">Black Tie / Glam</div></div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- MAP -->
+<section id="venue-map"><div class="container">
+<h2>Find the Venue</h2>
+<div id="map" class="map-container"></div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- SCHEDULE -->
+<section id="schedule"><div class="container">
+<h2>Schedule</h2>
+<div class="details__card" style="text-align:left">
+<div class="schedule__item"><div class="schedule__time">7:00 PM</div><div class="schedule__desc"><h3>Ceremony</h3><p>Venue location or details</p></div></div>
+<div class="schedule__item"><div class="schedule__time">7:30 PM</div><div class="schedule__desc"><h3>Cocktail Hour</h3><p>Drinks and appetizers</p></div></div>
+<div class="schedule__item"><div class="schedule__time">8:30 PM</div><div class="schedule__desc"><h3>Reception &amp; Dinner</h3><p>Dinner, speeches, and dancing</p></div></div>
+</div>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 2.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- RSVP -->
+<section id="rsvp"><div class="container">
+<h2>RSVP</h2>
+<p style="text-align:center;font-weight:300;color:#666;margin-bottom:clamp(1.25rem,3vw,1.5rem);font-size:clamp(0.85rem,3vw,0.95rem)">Kindly respond by 3.9.2026</p>
+<form class="rsvp" id="rsvp-form" novalidate>
+<div class="form-status" id="form-status"></div>
+<div class="form-group"><label for="name">Your Name(s) *</label><input type="text" id="name" name="name" placeholder="e.g. John &amp; Jane Smith" required /></div>
+<div class="form-group"><label>Will you be attending? *</label>
+<div class="radio-group" id="attending-group">
+<label><input type="radio" name="attending" value="yes" /><span>&#x2705; Yes, we'll be there!</span></label>
+<label><input type="radio" name="attending" value="no" /><span>&#x274C; Regretfully decline</span></label>
+</div></div>
+<div class="form-group"><label for="message">A message for the couple</label><textarea id="message" name="message" placeholder="Leave a note if you'd like..."></textarea></div>
+<button type="submit" class="btn-submit" id="submit-btn"><span class="spinner"></span><span class="btn-text">Send RSVP &#10003;</span></button>
+</form>
+</div></section>
+
+<!-- DIVIDER -->
+<div class="section-divider"><img src="images/Separator 1.png" alt="" class="divider-img" loading="lazy" /></div>
+
+<!-- PHOTOS -->
+<section id="photos"><div class="container">
+<h2>Photos</h2>
+<p style="text-align:center;font-weight:300;color:#666;margin-bottom:clamp(1.25rem,3vw,1.5rem);font-size:clamp(0.85rem,3vw,0.95rem)">Share photos from the day &mdash; we'll be able to download and keep them.</p>
+<div class="upload-zone" id="upload-zone">
+<div class="upload-zone__icon">&#x1F4F8;</div>
+<div class="upload-zone__text">Tap to Upload Photos</div>
+<div class="upload-zone__hint">or drag and drop here</div>
+<input type="file" id="file-input" accept="image/*,video/*" multiple />
+<div class="upload-status" id="upload-status"></div>
+</div>
+<p class="photo-disclaimer">Guests can add photos &amp; Videos, only the couple can delete them.</p>
+</div></section>
+
+<footer><div class="container">
+<p>We can't wait to celebrate with you!</p>
+</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0818449];const m=new maplibregl.Map({container:'map',style:'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',center:c,zoom:14.5,pitch:40,bearing:-8,attributionControl:false});m.addControl(new maplibregl.AttributionControl({compact:true}));m.addControl(new maplibregl.NavigationControl({showCompass:false}),'bottom-right');const e=document.createElement('div');e.innerHTML='<svg width=\"32\" height=\"40\" viewBox=\"0 0 36 44\" fill=\"none\"><path d=\"M18 0C8.06 0 0 8.06 0 18c0 13.5 18 26 18 26s18-12.5 18-26C36 8.06 27.94 0 18 0zm0 24.5c-3.59 0-6.5-2.91-6.5-6.5s2.91-6.5 6.5-6.5 6.5 2.91 6.5 6.5-2.91 6.5-6.5 6.5z\" fill=\"#c9a96e\"/><circle cx=\"18\" cy=\"18\" r=\"5\" fill=\"#fff\"/></svg>';e.style.cursor='pointer';new maplibregl.Marker({element:e}).setLngLat(c).setPopup(new maplibregl.Popup({offset:28,closeButton:true}).setHTML('<h3>Republican Guards Club</h3><p>Omar & Aya\\'s Wedding</p><p>3rd October, 2026 &bull; 7:00 PM</p><a class=\"popup-directions\" href=\"https://maps.google.com/?daddr=30.0818449,31.3153720\" target=\"_blank\">Get Directions &rarr;</a>')).addTo(m)});
+</script>
+<script>
+(function(){const z=document.getElementById('upload-zone'),i=document.getElementById('file-input'),s=document.getElementById('upload-status');if(!z)return;z.addEventListener('click',function(e){if(e.target.tagName!=='INPUT')i.click()});i.addEventListener('change',function(){if(this.files.length)h(this.files)});z.addEventListener('dragover',function(e){e.preventDefault();this.classList.add('dragover')});z.addEventListener('dragleave',function(){this.classList.remove('dragover')});z.addEventListener('drop',function(e){e.preventDefault();this.classList.remove('dragover');if(e.dataTransfer.files.length)h(e.dataTransfer.files)});function h(f){s.textContent='\u2705 Thanks! Your photos have been received.';s.className='upload-status success'}})();
+</script>
+<script>
+(function(){const f=document.getElementById('rsvp-form'),s=document.getElementById('form-status'),b=document.getElementById('submit-btn'),bt=b.querySelector('.btn-text');if(!f)return;const U='YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';f.addEventListener('submit',async function(e){e.preventDefault();const n=document.getElementById('name').value.trim(),a=document.querySelector('input[name="attending"]:checked'),m=document.getElementById('message').value.trim();if(!n||!a){t('Please fill in your name and RSVP status.','error');return}const d={name:n,attending:a.value,message:m,timestamp:new Date().toISOString()};if(U==='YOUR_APPS_SCRIPT_WEB_APP_URL_HERE'){t('\u2705 RSVP received! (Test mode)','success');f.reset();return}b.disabled=true;b.classList.add('loading');bt.textContent='Sending...';t('Sending your RSVP...','sending');try{const r=await fetch(U,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)});t('\u2705 Your RSVP has been sent! Thank you!','success');f.reset()}catch(e){t('\u274C Something went wrong. Please try again.','error')}finally{b.classList.remove('loading');b.disabled=false;bt.textContent='Send RSVP \u2713'}});function t(m,tp){s.textContent=m;s.className='form-status '+tp;s.style.display='block'}})();
+</script>
+</body>
+</html>
