@@ -411,15 +411,13 @@ document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0
 </script>
 
 <!-- Google Picker for large file uploads -->
-<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
-<script src="https://accounts.google.com/gsi/client"></script>
+<script src="https://accounts.google.com/gsi/client" onload="onGisLoad()"></script>
 <script>
 var CLIENT_ID = '386309270300-ou39l675ocsulq2a4hpd5fr7ho7ac2ek.apps.googleusercontent.com';
 var FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
-var pickerBtn = document.getElementById('picker-btn');
-var tokenClient;
+var tokenClient = null;
 
-function onApiLoad() {
+function onGisLoad() {
   tokenClient = google.accounts.oauth2.initTokenClient({
     client_id: CLIENT_ID,
     scope: 'https://www.googleapis.com/auth/drive.file',
@@ -432,6 +430,10 @@ function onApiLoad() {
 }
 
 function openPicker() {
+  if (!tokenClient) {
+    alert('Google API still loading. Please wait a moment and try again.');
+    return;
+  }
   tokenClient.requestAccessToken({prompt: 'consent'});
 }
 
