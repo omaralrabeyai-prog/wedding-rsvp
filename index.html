@@ -391,7 +391,9 @@ section{padding:1rem 0}
 <input type="file" id="file-input" accept="image/*,video/*" multiple />
 <div class="upload-status" id="upload-status"></div>
 </div>
-<p style="text-align:center;font-weight:600;color:#f0f0e8;margin-top:1.5rem;font-size:0.9rem">Guests can add photos &amp; Videos, only the couple can delete them.</p></div></section>
+<p style="text-align:center;font-weight:600;color:#f0f0e8;margin-top:1.5rem;font-size:0.9rem">Guests can add photos &amp; Videos, only the couple can delete them.</p>
+<p id="picker-btn" style="text-align:center;margin-top:1rem;display:none"><button onclick="openPicker()" style="background:#c9a96e;color:#fff;border:none;padding:0.75rem 2rem;border-radius:10px;font-size:1rem;cursor:pointer;font-family:'Inter',sans-serif">📁 Upload Large Files (no size limit)</button></p>
+</div></section>
 
 <footer><div class="container">
 <p style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:300;color:#000">We can't wait to celebrate with you!</p>
@@ -406,6 +408,64 @@ document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0
 </script>
 <script>
 (function(){const f=document.getElementById('rsvp-form'),s=document.getElementById('form-status'),b=document.getElementById('submit-btn'),bt=b.querySelector('.btn-text');if(!f)return;const U='https://script.google.com/macros/s/AKfycbxhKF_KYrf7ExJ23B48cM8fteI7awzFx5809ETbRS7Rs408EHG0nfbM_zCJCorw9XXi/exec';f.addEventListener('submit',async function(e){e.preventDefault();const n=document.getElementById('name').value.trim(),a=document.querySelector('input[name="attending"]:checked'),m=document.getElementById('message').value.trim();if(!n||!a){t('Please fill in your name and RSVP status.','error');return}const d={name:n,attending:a.value,message:m,timestamp:new Date().toISOString()};b.disabled=true;b.classList.add('loading');bt.textContent='Sending...';t('Sending your RSVP...','sending');try{await fetch(U,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)});t('✅ Your RSVP has been sent! Thank you!','success');f.reset()}catch(e){t('❌ Something went wrong. Please try again.','error')}finally{b.classList.remove('loading');b.disabled=false;bt.textContent='Send RSVP'}});function t(m,tp){s.textContent=m;s.className='form-status '+tp;s.style.display='block'}})();
+</script>
+
+<!-- Google Picker for large file uploads -->
+<script src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
+<script>
+var CLIENT_ID = '386309270300-ou39l675ocsulq2a4hpd5fr7ho7ac2ek.apps.googleusercontent.com';
+var FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
+var pickerBtn = document.getElementById('picker-btn');
+var tokenClient;
+
+function onApiLoad() {
+  gapi.load('picker');
+  google.accounts.id.initialize({client_id: CLIENT_ID});
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: function(resp) {
+      if (resp.access_token) {
+        gapi.load('picker', function() {
+          createPicker(resp.access_token);
+        });
+      }
+    }
+  });
+  if (pickerBtn) pickerBtn.style.display = 'block';
+}
+
+function openPicker() {
+  tokenClient.requestAccessToken();
+}
+
+function createPicker(token) {
+  var view = new google.picker.DocsView(google.picker.ViewId.DOCS)
+    .setIncludeFolders(true)
+    .setSelectFolderEnabled(false)
+    .setMode(google.picker.DocsViewMode.LIST);
+  
+  var uploadView = new google.picker.DocsUploadView()
+    .setParent(FOLDER_ID);
+  
+  var picker = new google.picker.PickerBuilder()
+    .addView(view)
+    .addView(uploadView)
+    .setOAuthToken(token)
+    .setDeveloperKey(CLIENT_ID)
+    .setAppId(CLIENT_ID.split('-')[0])
+    .setCallback(function(data) {
+      if (data.action == 'picked') {
+        document.getElementById('upload-status').textContent = '✅ Files uploaded successfully!';
+        document.getElementById('upload-status').className = 'upload-status success';
+        document.getElementById('upload-status').style.display = 'block';
+        setTimeout(function() { document.getElementById('upload-status').style.display = 'none' }, 5000);
+      }
+    })
+    .build();
+  picker.setVisible(true);
+}
 </script>
 <div class="bottom-logo" style="text-align:center;width:100%;overflow:hidden;line-height:0;padding:1rem 0 2rem;margin-top:-5vh">
 <img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_15_23%20AM.png" alt="" style="width:30%;max-width:210px;height:auto;display:inline-block" />
