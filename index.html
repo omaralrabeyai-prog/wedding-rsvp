@@ -410,112 +410,22 @@ document.addEventListener('DOMContentLoaded',function(){const c=[31.3153720,30.0
 (function(){const f=document.getElementById('rsvp-form'),s=document.getElementById('form-status'),b=document.getElementById('submit-btn'),bt=b.querySelector('.btn-text');if(!f)return;const U='https://script.google.com/macros/s/AKfycbxhKF_KYrf7ExJ23B48cM8fteI7awzFx5809ETbRS7Rs408EHG0nfbM_zCJCorw9XXi/exec';f.addEventListener('submit',async function(e){e.preventDefault();const n=document.getElementById('name').value.trim(),a=document.querySelector('input[name="attending"]:checked'),m=document.getElementById('message').value.trim();if(!n||!a){t('Please fill in your name and RSVP status.','error');return}const d={name:n,attending:a.value,message:m,timestamp:new Date().toISOString()};b.disabled=true;b.classList.add('loading');bt.textContent='Sending...';t('Sending your RSVP...','sending');try{await fetch(U,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(d)});t('✅ Your RSVP has been sent! Thank you!','success');f.reset()}catch(e){t('❌ Something went wrong. Please try again.','error')}finally{b.classList.remove('loading');b.disabled=false;bt.textContent='Send RSVP'}});function t(m,tp){s.textContent=m;s.className='form-status '+tp;s.style.display='block'}})();
 </script>
 
-<!-- Google Picker for large file uploads -->
-<script src="https://accounts.google.com/gsi/client"></script>
+<!-- Google Picker API -->
+<script src="https://apis.google.com/js/api.js"></script>
 <script>
 var CLIENT_ID = '386309270300-ou39l675ocsulq2a4hpd5fr7ho7ac2ek.apps.googleusercontent.com';
 var FOLDER_ID = '1ZGqJb8DmSGUv2WwKPJGOmFkZeezBrkWf';
-var tokenClient = null;
+var pickerApiLoaded = false;
+var oauthToken = null;
 
-// Initialize token client once GIS is available
-function initTokenClient() {
-  if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/drive.file',
-      callback: function(resp) {
-        if (resp.access_token) {
-          document.getElementById('file-input').click();
-        }
-      }
-    });
-  }
+function onPickerApiLoad() {
+  pickerApiLoaded = true;
 }
-
-// Retry init every second for 10 seconds
-var initInterval = setInterval(function() {
-  if (!tokenClient) initTokenClient();
-  if (tokenClient) clearInterval(initInterval);
-}, 1000);
-setTimeout(function() { clearInterval(initInterval); }, 10000);
 
 function openPicker() {
-  if (!tokenClient) {
-    alert('Still loading... please wait a few seconds and click again.');
-    // Try once more
-    initTokenClient();
-    if (tokenClient) tokenClient.requestAccessToken({prompt: 'consent'});
-    return;
-  }
-  tokenClient.requestAccessToken({prompt: 'consent'});
-}
-
-// Override the normal file input to upload via Drive API when picker is used
-document.addEventListener('DOMContentLoaded', function() {
-  var origInput = document.getElementById('file-input');
-  var status = document.getElementById('upload-status');
-  
-  origInput.addEventListener('change', async function() {
-    if (!this.files.length || !tokenClient) return;
-    
-    status.textContent = '📤 Uploading directly to Drive...';
-    status.className = 'upload-status';
-    status.style.display = 'block';
-    
-    for (var i = 0; i < this.files.length; i++) {
-      var file = this.files[i];
-      var reader = new FileReader();
-      
-      var content = await new Promise(function(r) {
-        reader.onload = function() { r(reader.result.split(',')[1]); };
-        reader.readAsDataURL(file);
-      });
-      
-      var meta = {
-        name: file.name,
-        mimeType: file.type || 'application/octet-stream',
-        parents: [FOLDER_ID]
-      };
-      
-      var boundary = '-------' + Date.now();
-      var body = '--' + boundary + '\r\n';
-      body += 'Content-Type: application/json; charset=UTF-8\r\n\r\n';
-      body += JSON.stringify(meta) + '\r\n';
-      body += '--' + boundary + '\r\n';
-      body += 'Content-Type: ' + (file.type || 'application/octet-stream') + '\r\n';
-      body += 'Content-Transfer-Encoding: base64\r\n\r\n';
-      body += content + '\r\n';
-      body += '--' + boundary + '--';
-      
-      try {
-        var resp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + tokenClient.access_token,
-            'Content-Type': 'multipart/related; boundary=' + boundary
-          },
-          body: body
-        });
-        
-        if (resp.ok) {
-          status.textContent = '✅ ' + file.name + ' uploaded to Drive!';
-          status.className = 'upload-status success';
-        } else {
-          status.textContent = '❌ ' + file.name + ' failed';
-          status.className = 'upload-status error';
-        }
-      } catch(e) {
-        status.textContent = '❌ Error: ' + e.message;
-        status.className = 'upload-status error';
-      }
-    }
-    
-    status.style.display = 'block';
-    this.value = '';
-    setTimeout(function() { status.style.display = 'none'; }, 5000);
-  });
-});
-</script>
+  if (!pickerApiLoaded) {
+    alert('Picker still loading, please wait...');
+    retu...[truncated]
 <div class="bottom-logo" style="text-align:center;width:100%;overflow:hidden;line-height:0;padding:1rem 0 2rem;margin-top:-5vh">
 <img src="images/ChatGPT%20Image%20Jun%2023%2C%202026%20at%2012_15_23%20AM.png" alt="" style="width:30%;max-width:210px;height:auto;display:inline-block" />
 </div>
